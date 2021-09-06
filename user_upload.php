@@ -13,3 +13,14 @@ $usersTable = "CREATE TABLE Users (
 	surname VARCHAR(30) NOT NULL,
 	email VARCHAR(50) NOT NULL UNIQUE
 )";
+
+if (mysqli_query($db, $usersTable)) {
+	echo "Created table";
+} else {
+	echo "Did not create table " . mysqli_error($db);
+}
+
+if ($db->connect_error) {
+	die("Unable to connect to database: {$db->connect_error}");
+}
+
