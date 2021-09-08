@@ -4,7 +4,7 @@ A small CLI App for inserting data from a .csv file. The CSV file must having th
 
 | name | surname | email |
 |------|---------|-------|
-| John | Doe      | jd@email.com |
+| John | Doe     | jd@email.com |
 
 ## Installation Instructions
 This script was tested using PHP7.2 and Mariadb 10.6.4. If you want to use the exact environment I used, I use a docker setup found [here](https://github.com/lifeofdan/docker_env). Setup instructions for that are found at that repo and are outside the scope of this application.
