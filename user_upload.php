@@ -15,11 +15,11 @@
 $scriptName = $argv[0]; // Not sure yet if I will utilize this.
 
 // Params
-$shortopts = "";
-$shortopts .= "u:";
-$shortopts .= "p:";
-$shortopts .= "h:";
-$longopts = array(
+$shortParams = "";
+$shortParams .= "u:";
+$shortParams .= "p:";
+$shortParams .= "h:";
+$longParams = array(
 	"create_table::",
 	"dry_run::",
 	"file:",
@@ -27,9 +27,9 @@ $longopts = array(
 );
 
 // Database Settings & Defaults
-$dbServer = '';
-$dbUser = '';
-$dbPassword = '';
+$dbServer = 'db';
+$dbUser = 'root';
+$dbPassword = 'dbpassword';
 $dbName = 'test';
 
 $createTable = false;
@@ -37,7 +37,7 @@ $help = false;
 $dryRun = false;
 $file = '';
 
-$options = getopt($shortopts, $longopts, $rest_index);
+$options = getopt($shortParams, $longParams, $rest_index);
 
 foreach($options as $option => $value) {
 	if ($option === 'help') {
@@ -162,4 +162,6 @@ function formatEmail($email)
 	$email = (string) $email;
 	$email = trim(strtolower($email));
 	$email = str_replace('', '', $email);
+
+	return $email;
 }
