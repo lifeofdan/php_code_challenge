@@ -3,6 +3,7 @@
 A small CLI App for inserting data from a .csv file. The CSV file must having the following in the correct order.
 
 | name | surname | email |
+|------|---------|-------|
 | John | Doe      | jd@email.com |
 
 ## Installation Instructions
