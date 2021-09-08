@@ -1,30 +1,36 @@
 <?php
-/* @todo
+/*
 	Arguments to take [
-		'user_upload.php' (this one will not be used but argv will list it as an arg),
 		'--create_table' This will create the users table ,
 		'--dry_run', This will show the results of importing the file but doesn't write to the db
 		'--file', specify the file ot use
 		'-u' specify the user for the db
 		'-p', specify the password to the db
 		'-h', specify the db host
+		'-n', specify the db name //Not in the specs but usefull all the same.
 		'--help', give help for the cli app with the options and a brief description
 	];
 */
 
-$scriptName = $argv[0]; // Not sure yet if I will utilize this.
-
 // Params
-$shortParams = "";
-$shortParams .= "u:";
-$shortParams .= "p:";
-$shortParams .= "h:";
+$shortParams = "u:p:h:n:";
 $longParams = array(
 	"create_table::",
 	"dry_run::",
 	"file:",
 	"help::"
 );
+$helpMsg =
+	"command [Options]" . PHP_EOL . PHP_EOL .
+	"Options:" . PHP_EOL .
+	"-h [hostname]		Specify database host name." . PHP_EOL .
+	"-u [username]		Specify database user name." . PHP_EOL .
+	"-p [password]		Specify database password." . PHP_EOL .
+	"-n [databasename]	Specify database name." . PHP_EOL .
+	"--create_table 		Create the Users table. This only needs to be run this once." . PHP_EOL .
+	"--dry_run 		Used with the --file option to run the command without a database insert." . PHP_EOL .
+	"--file [filename]	Specify the file you want to import." . PHP_EOL .
+	"--help 			Displays help instructions." . PHP_EOL;
 
 // Database Settings & Defaults
 $dbServer = 'db';
@@ -37,30 +43,38 @@ $help = false;
 $dryRun = false;
 $file = '';
 
-$options = getopt($shortParams, $longParams, $rest_index);
+$params = getopt($shortParams, $longParams, $rest_index);
 
-foreach($options as $option => $value) {
-	if ($option === 'help') {
+foreach($params as $param => $value) {
+	if ($param === 'help') {
 		$help = true;
 	}
 
-	if ($option === 'create_table') {
+	if ($param === 'create_table') {
 		$createTable = true;
 	}
 
-	if ($option === 'h') {
+	if ($param === 'h') {
 		$dbServer = $value;
 	}
-	if ($option === 'u') {
+
+	if ($param === 'u') {
 		$dbUser = $value;
 	}
-	if ($option === 'p') {
+
+	if ($param === 'p') {
 		$dbPassword = $value;
 	}
-	if ($option === 'dry_run') {
+
+	if ($param === 'n') {
+		$dbName = $value;
+	}
+
+	if ($param === 'dry_run') {
 		$dryRun = true;
 	}
-	if ($option === 'file') {
+
+	if ($param === 'file') {
 		$file = $value;
 	}
 }
@@ -69,7 +83,7 @@ $db = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
 
 switch ($help) {
 	case true:
-		echo "here is some help" . PHP_EOL;
+		echo $helpMsg;
 		break;
 	case false:
 		switch ($createTable) {
@@ -141,7 +155,7 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 				}
 				$db->rollback();
 			} else {
-				echo "Cannot validate email {$email}. Will not add to table." . PHP_EOL;
+				echo "Cannot validate email {$email}. This row will not add to table." . PHP_EOL;
 			}
 		}
 		$skipRow1++;
