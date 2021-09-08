@@ -1,6 +1,6 @@
 # CLI User Importer
 ## Description
-A small CLI App for inserting data from a .csv file. The CSV file must having the following in the correct order.
+A small CLI App for inserting data from a .csv file. The CSV file must having the following.
 
 | name | surname | email |
 |------|---------|-------|
