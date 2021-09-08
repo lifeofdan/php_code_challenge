@@ -39,7 +39,7 @@ For example:
 	-p [password]		Specify database password.
 	-n [databasename]	Specify database name.
 	--create_table 		Create the Users table. This only needs to be run this once.
-	--dry_run 			Used with the --file option to run the command without a database insert.
+	--dry_run 		Used with the --file option to run the command without a database insert.
 	--file [filename]	Specify the file you want to import.
-	--help 				Displays help instructions.
+	--help 			Displays help instructions.
 ```
