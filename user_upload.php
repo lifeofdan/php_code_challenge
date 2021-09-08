@@ -1,26 +1,40 @@
 <?php
+/* @todo
+	Arguments to take [
+		'user_upload.php' (this one will not be used but argv will list it as an arg),
+	'--create_table' This will create the users table ,
+	'--dry_run', This will show the results of importing the file but doesn't write to the db
+	'--file', specify the file ot use
+	'-u' specify the user for the db
+	'-p', specify the password to the db
+	'-h', specify the db host
+	'--help', give help for the cli app with the options and a brief description
+	];
+*/
 
-$dbServer = 'db';
-$dbUser = 'root';
-$dbPassword = 'dbpassword';
+$scriptName = $argv[0]; // Not sure yet if I will utilize this.
+
+// Params
+$shortopts = "";
+$shortopts .= "u:";
+$shortopts .= "p:";
+$shortopts .= "h:";
+$longopts = array(
+	"create_table::",
+	"dry_run::",
+	"file:",
+	"help::"
+);
+
+// Database Settings & Defaults
+$dbServer = '';
+$dbUser = '';
+$dbPassword = '';
 $dbName = 'test';
 
-$db = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
+$createTable = false;
+$help = false;
+$dryRun = false;
+$file = '';
 
-$usersTable = "CREATE TABLE Users (
-	id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(30) NOT NULL,
-	surname VARCHAR(30) NOT NULL,
-	email VARCHAR(50) NOT NULL UNIQUE
-)";
-
-if (mysqli_query($db, $usersTable)) {
-	echo "Created table";
-} else {
-	echo "Did not create table " . mysqli_error($db);
-}
-
-if ($db->connect_error) {
-	die("Unable to connect to database: {$db->connect_error}");
-}
-
+$options = getopt($shortopts, $longopts, $rest_index);
