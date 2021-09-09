@@ -44,7 +44,6 @@ $dryRun = false;
 $file = '';
 
 $params = getopt($shortParams, $longParams, $rest_index);
-
 foreach($params as $param => $value) {
 	if ($param === 'help') {
 		$help = true;
@@ -94,20 +93,20 @@ switch ($help) {
 			case false:
 				if ($dryRun) {
 					if ($file) {
-						echo "we do a dry run" . PHP_EOL;
+						echo "-- Dry Run: Nothing will be added to the database. --" . PHP_EOL . PHP_EOL;
 					} else {
-						echo "You need to specify a file" . PHP_EOL;
+						echo "Error: You need to specify a file in order to do a dry run." . PHP_EOL;
 					}
 				}
 
 				if ($file) {
 					insertDataFromCVSFile($file, $dryRun);
 				} else {
-					echo "You need to specify a file." . PHP_EOL;
+					echo "Error: You need to specify a file." . PHP_EOL;
 				}
 				break;
 		}
-	break;
+		break;
 }
 
 function createTable()
@@ -121,13 +120,13 @@ function createTable()
 					)";
 
 	if ($db->connect_error) {
-		die("Unable to connect to database: {$db->connect_error}" . PHP_EOL);
+		die("Error: Unable to connect to database: {$db->connect_error}" . PHP_EOL);
 	}
 
 	if (mysqli_query($db, $usersTable)) {
 		echo "Created table" . PHP_EOL;
 	} else {
-		echo "Did not create table" . mysqli_error($db) . PHP_EOL;
+		echo "Error: Did not create table" . mysqli_error($db) . PHP_EOL;
 	}
 }
 
@@ -155,7 +154,7 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 				}
 				$db->rollback();
 			} else {
-				echo "Cannot validate email {$email}. This row will not add to table." . PHP_EOL;
+				echo "Error: Cannot validate email {$email}. This row will not added to table." . PHP_EOL;
 			}
 		}
 		$skipRow1++;
@@ -164,7 +163,7 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 
 function formatName($name)
 {
-	$name = (string) $name;
+	$name = $name;
 	$name = strtolower($name);
 	$name = ucwords($name, " \t\r\n\f\v'");
 
@@ -173,7 +172,7 @@ function formatName($name)
 
 function formatEmail($email)
 {
-	$email = (string) $email;
+	$email = $email;
 	$email = trim(strtolower($email));
 	$email = str_replace('', '', $email);
 
