@@ -164,6 +164,15 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 function formatName($name)
 {
 	$name = $name;
+	/*
+		SANITIZE NAMES
+
+		Name fields are difficult to check because of the need for special characters in different countries.
+		This preg_replace only replaces a few very obvious characters and numbers.
+		This does not include unicode.
+	*/
+	$name = preg_replace("/[0-9\~!@#\$%\^&\*\(\)=\+\|\[\]\{\};\\:\",\.\<\>\?\/]+/", "", $name);
+
 	$name = strtolower($name);
 	$name = ucwords($name, " \t\r\n\f\v'");
 
