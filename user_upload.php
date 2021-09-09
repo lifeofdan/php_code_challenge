@@ -12,14 +12,6 @@
 	];
 */
 
-// Params
-$shortParams = "u:p:h:n:";
-$longParams = array(
-	"create_table::",
-	"dry_run::",
-	"file:",
-	"help::"
-);
 $helpMsg =
 	"command [Options]" . PHP_EOL . PHP_EOL .
 	"Options:" . PHP_EOL .
@@ -32,75 +24,61 @@ $helpMsg =
 	"--file [filename]	Specify the file you want to import." . PHP_EOL .
 	"--help 			Displays help instructions." . PHP_EOL;
 
-// Database Settings & Defaults
-$dbServer = 'db';
-$dbUser = 'root';
-$dbPassword = 'dbpassword';
-$dbName = 'test';
+// Params
+$shortParams = "u:p:h:n:";
+$longParams = array(
+	"create_table::",
+	"dry_run::",
+	"file:",
+	"help::"
+);
 
-$createTable = false;
-$help = false;
-$dryRun = false;
-$file = '';
+$selectedLongParams = array_fill_keys(str_replace(":", "", array_values($longParams)), false);
+$selectedShortParams = array_fill_keys(explode(':', $shortParams, -1), '');
+
+// Database Settings Defaults
+$selectedShortParams['h'] = 'db' ; // HOST
+$selectedShortParams['u'] = 'root'; // USER
+$selectedShortParams['p'] = 'dbpassword'; // PASSWORD
+$selectedShortParams['n'] = 'test'; // DATABASE NAME
 
 $params = getopt($shortParams, $longParams, $rest_index);
+
 foreach($params as $param => $value) {
-	if ($param === 'help') {
-		$help = true;
+	if (array_key_exists($param, $selectedLongParams) && $param !== 'file') {
+		$selectedLongParams[$param] = !$selectedLongParams[$param];
+	} else if ($param === 'file') {
+		$selectedLongParams['file'] = $value;
 	}
 
-	if ($param === 'create_table') {
-		$createTable = true;
-	}
-
-	if ($param === 'h') {
-		$dbServer = $value;
-	}
-
-	if ($param === 'u') {
-		$dbUser = $value;
-	}
-
-	if ($param === 'p') {
-		$dbPassword = $value;
-	}
-
-	if ($param === 'n') {
-		$dbName = $value;
-	}
-
-	if ($param === 'dry_run') {
-		$dryRun = true;
-	}
-
-	if ($param === 'file') {
-		$file = $value;
+	if (array_key_exists($param, $selectedShortParams)) {
+		$selectedShortParams[$param] = $value;
 	}
 }
 
-$db = new mysqli($dbServer, $dbUser, $dbPassword, $dbName);
+$db = new mysqli($selectedShortParams['h'], $selectedShortParams['u'], $selectedShortParams['p'], $selectedShortParams['n']);
 
-switch ($help) {
+switch ($selectedLongParams['help']) {
 	case true:
 		echo $helpMsg;
 		break;
 	case false:
-		switch ($createTable) {
+		switch ($selectedLongParams['create_table']) {
 			case true:
 				echo "Attempting to create users table..." . PHP_EOL;
 				createTable();
 				break;
 			case false:
-				if ($dryRun) {
-					if ($file) {
+				if ($selectedLongParams['dry_run']) {
+					if ($selectedLongParams['file']) {
 						echo "-- Dry Run: Nothing will be added to the database. --" . PHP_EOL . PHP_EOL;
 					} else {
 						echo "Error: You need to specify a file in order to do a dry run." . PHP_EOL;
 					}
 				}
 
-				if ($file) {
-					insertDataFromCVSFile($file, $dryRun);
+				if ($selectedLongParams['file']) {
+					insertDataFromCVSFile($selectedLongParams['file'], $selectedLongParams['dry_run']);
 				} else {
 					echo "Error: You need to specify a file." . PHP_EOL;
 				}
@@ -154,7 +132,7 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 				}
 				$db->rollback();
 			} else {
-				echo "Error: Cannot validate email {$email}. This row will not added to table." . PHP_EOL;
+				echo "Error: Cannot validate email $email. This row will not added to table." . PHP_EOL;
 			}
 		}
 		$skipRow1++;
