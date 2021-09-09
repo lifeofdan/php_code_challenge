@@ -169,7 +169,7 @@ function formatName($name)
 		SANITIZE NAMES
 
 		Name fields are difficult to check because of the need for special characters in different countries.
-		This preg_replace only searches for a few very obvious characters to replace and numbers.
+		This preg_replace only replaces a few very obvious characters and numbers.
 		This does not include unicode.
 	*/
 	$name = preg_replace("/[0-9\~!@#\$%\^&\*\(\)=\+\|\[\]\{\};\\:\",\.\<\>\?\/]+/", "", $name);
