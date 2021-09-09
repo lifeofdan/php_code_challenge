@@ -164,7 +164,7 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 
 function formatName($name)
 {
-	$name = (string) $name;
+	$name = $name;
 	$name = strtolower($name);
 	$name = ucwords($name, " \t\r\n\f\v'");
 
@@ -173,7 +173,7 @@ function formatName($name)
 
 function formatEmail($email)
 {
-	$email = (string) $email;
+	$email = $email;
 	$email = trim(strtolower($email));
 	$email = str_replace('', '', $email);
 
