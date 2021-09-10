@@ -63,28 +63,37 @@ switch ($selectedLongParams['help']) {
 		echo $helpMsg;
 		break;
 	case false:
-		switch ($selectedLongParams['create_table']) {
-			case true:
-				echo "Attempting to create users table..." . PHP_EOL;
-				createTable();
-				break;
-			case false:
-				if ($selectedLongParams['dry_run']) {
-					if ($selectedLongParams['file']) {
-						echo "-- Dry Run: Nothing will be added to the database. --" . PHP_EOL . PHP_EOL;
-					} else {
-						echo "Error: You need to specify a file in order to do a dry run." . PHP_EOL;
-					}
-				}
-
-				if ($selectedLongParams['file']) {
-					insertDataFromCVSFile($selectedLongParams['file'], $selectedLongParams['dry_run']);
-				} else {
-					echo "Error: You need to specify a file." . PHP_EOL;
-				}
-				break;
-		}
+		createTableOrImportFromFile($selectedLongParams['create_table'], $selectedLongParams['dry_run'], $selectedLongParams['file']);
 		break;
+}
+
+function createTableOrImportFromFile($createTable, $dryRun, $file)
+{
+	switch ($createTable) {
+		case true:
+			echo "Attempting to create users table..." . PHP_EOL;
+			createTable();
+			break;
+		case false:
+			importFromFile($file, $dryRun);
+			break;
+	}
+}
+
+function importFromFile($file, $dryRun)
+{
+	if ($dryRun) {
+		if ($file) {
+			echo "-- Dry Run: Nothing will be added to the database. --" . PHP_EOL . PHP_EOL;
+		} else {
+			echo "Error: You need to specify a file in order to do a dry run." . PHP_EOL;
+		}
+	}
+	if ($file) {
+		insertDataFromCVSFile($file, $dryRun);
+	} else {
+		echo "Error: You need to specify a file." . PHP_EOL;
+	}
 }
 
 function createTable()
