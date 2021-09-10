@@ -150,7 +150,6 @@ function insertDataFromCVSFile(string $file, bool $dryRun)
 
 function formatName($name)
 {
-	$name = $name;
 	/*
 		SANITIZE NAMES
 
@@ -168,9 +167,6 @@ function formatName($name)
 
 function formatEmail($email)
 {
-	$email = $email;
 	$email = trim(strtolower($email));
-	$email = str_replace('', '', $email);
-
 	return $email;
 }
