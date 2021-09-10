@@ -7,7 +7,7 @@
 		'-u' specify the user for the db
 		'-p', specify the password to the db
 		'-h', specify the db host
-		'-n', specify the db name //Not in the specs but usefull all the same.
+		'-n', specify the db name // Not in the specs but useful all the same.
 		'--help', give help for the cli app with the options and a brief description
 	];
 */
